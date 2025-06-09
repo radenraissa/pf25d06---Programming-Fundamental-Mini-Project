@@ -1,3 +1,3 @@
-public enum State {  // to save as "State.java"
+public enum State {
     PLAYING, DRAW, CROSS_WON, NOUGHT_WON
 }
