@@ -1,4 +1,6 @@
-public enum Seed {   // to save as "Seed.java"
+package Practice.nonOOP;
+
+public enum Seed {   // to save as "nonOOP.Seed.java"
     CROSS("X"), NOUGHT("O"), NO_SEED(" ");
 
     // Private variable

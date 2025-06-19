@@ -1,4 +1,5 @@
-import java.sql.SQLOutput;
+package Practice.nonOOP;
+
 import java.util.Scanner;
 /**
  * Tic-Tac-Toe: Two-player, console-based, non-graphics, non-OO version.
@@ -8,7 +9,7 @@ import java.util.Scanner;
 public class TTTConsoleNonOO {
     // Define named constants for:
     //  1. Player: using CROSS and NOUGHT
-    //  2. Cell contents: using CROSS, NOUGHT and NO_SEED
+    //  2. nonOOP.Cell contents: using CROSS, NOUGHT and NO_SEED
     public static final int CROSS   = 0; // CONTENT
     public static final int NOUGHT  = 1; // CONTENT
     public static final int NO_SEED = 2;

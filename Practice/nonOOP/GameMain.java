@@ -1,3 +1,5 @@
+package Practice.nonOOP;
+
 import java.util.Scanner;
 /**
  * The main class for the Tic-Tac-Toe (Console-OO, non-graphics version)
@@ -7,9 +9,9 @@ public class GameMain {
     // Define properties
     /** The game board */
     private Board board;
-    /** The current state of the game (of enum State) */
+    /** The current state of the game (of enum nonOOP.State) */
     private State currentState;
-    /** The current player (of enum Seed) */
+    /** The current player (of enum nonOOP.Seed) */
     private Seed  currentPlayer;
 
     private static Scanner in = new Scanner(System.in);
