@@ -24,35 +24,59 @@ public class GameMain extends JPanel {
     private Seed currentPlayer;  // the current player
     private JLabel statusBar;    // for displaying status message
 
+    private GameMode currentMode; // sebagai penyimpan mode saat ini
     private BotPlayer bot; // menambahkan instance setelah class BotPlayer
 
     /** Constructor to setup the UI and game components */
-    public GameMain() {
+    // constructor diubah untuk menerima mode game yang dipilih
+    public GameMain(GameMode mode) {
+        this.currentMode = mode;
+        if (this.currentMode == GameMode.LOCAL_PVE){
+            bot = new BotPlayer();
+        } // jika memilih PVE, program akan menginisiasi pemain BOT untuk melawan player
 
         // This JPanel fires MouseEvent
         super.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {  // mouse-clicked handler
+
+            if (currentState == State.PLAYING) {
+                if (currentMode == GameMode.LOCAL_PVE && currentPlayer == Seed.NOUGHT){
+                    return; // jangan beri input apa-apa, abaikan player jika giliran BOT
+                }
+
                 int mouseX = e.getX();
                 int mouseY = e.getY();
                 // Get the row and column clicked
                 int row = mouseY / Cell.SIZE;
                 int col = mouseX / Cell.SIZE;
 
-                if (currentState == State.PLAYING) {
-                    if (row >= 0 && row < Board.ROWS && col >= 0 && col < Board.COLS
-                            && board.cells[row][col].content == Seed.NO_SEED) {
-                        // Update cells[][] and return the new game state after the move
-                        currentState = board.stepGame(currentPlayer, row, col);
-                        // Switch player
-                        currentPlayer = (currentPlayer == Seed.CROSS) ? Seed.NOUGHT : Seed.CROSS;
+
+
+                if (row >= 0 && row < Board.ROWS && col >= 0 && col < Board.COLS
+                        && board.cells[row][col].content == Seed.NO_SEED) {
+                    // Update cells[][] and return the new game state after the move
+                    currentState = board.stepGame(currentPlayer, row, col);
+                    // Switch player
+                    currentPlayer = (currentPlayer == Seed.CROSS) ? Seed.NOUGHT : Seed.CROSS;
+
+                    // JIKA mode PvE dan sekarang giliran bot (NOUGHT), panggil bot
+                    if (currentMode == GameMode.LOCAL_PVE && currentPlayer == Seed.NOUGHT && currentState == State.PLAYING) {
+                        // Beri jeda agar gerakan bot tidak terasa instan
+                        Timer timer = new Timer(200, ae -> {
+                            botMove(); // bot memilih kolom
+                            repaint(); // gambar ulang setelah bot memilih kolom
+                        });
+                        timer.setRepeats(false);
+                        timer.start();
                     }
-                } else {        // game over
-                    newGame();  // restart the game
                 }
-                // Refresh the drawing canvas
-                repaint();  // Callback paintComponent().
+            } else {        // game over
+                newGame();  // restart the game
             }
+            // Refresh the drawing canvas
+            repaint();  // Callback paintComponent().
+        }
         });
 
         // Setup the status bar (JLabel) to display status message
@@ -73,6 +97,17 @@ public class GameMain extends JPanel {
         // Set up Game
         initGame();
         newGame();
+    }
+
+    // mengambil koordinat array pergerakan bot dari 1D array move
+    private void botMove() {
+        if (currentState == State.PLAYING && currentPlayer == Seed.NOUGHT) {
+            int[] move = bot.makeMove(board);
+            int row = move[0];
+            int col = move[1];
+            currentState = board.stepGame(currentPlayer, row, col);
+            currentPlayer = Seed.CROSS;
+        }
     }
 
     /** Initialize the game (run once) */
@@ -118,16 +153,36 @@ public class GameMain extends JPanel {
     /** The entry "main" method */
     public static void main(String[] args) {
         // Run GUI construction codes in Event-Dispatching thread for thread safety
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                JFrame frame = new JFrame(TITLE);
-                // Set the content-pane of the JFrame to an instance of main JPanel
-                frame.setContentPane(new GameMain());
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.pack();
-                frame.setLocationRelativeTo(null); // center the application window
-                frame.setVisible(true);            // show it
+        javax.swing.SwingUtilities.invokeLater(() -> {
+
+            //menampilkan pilihan mode
+            Object[] options = {"LOCAL PVP", "PVE (vs bot)"};
+            int choice = JOptionPane.showOptionDialog(
+                    null,
+                    "Pilih Mode: ",
+                    "Tic Tac Toe",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null, options, options[0]);
+
+            // menangani exit program
+            if (choice == JOptionPane.CLOSED_OPTION) {
+                System.exit(0);
             }
+
+            // menyimpan mode yang dipilih player
+            GameMode selectedMode = (choice == 0) ? GameMode.LOCAL_PVP : GameMode.LOCAL_PVE;
+
+            // buat frame dan panel mode permainan yang dipilih player
+            JFrame frame = new JFrame(TITLE);
+            // Set the content-pane of the JFrame to an instance of main JPanel
+
+            frame.setContentPane(new GameMain(selectedMode));
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.pack();
+            frame.setLocationRelativeTo(null); // center the application window
+            frame.setVisible(true);            // show it
+
         });
     }
 }
