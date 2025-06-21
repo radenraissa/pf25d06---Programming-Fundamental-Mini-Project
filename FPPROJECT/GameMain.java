@@ -24,6 +24,8 @@ public class GameMain extends JPanel {
     private Seed currentPlayer;  // the current player
     private JLabel statusBar;    // for displaying status message
 
+    private BotPlayer bot; // menambahkan instance setelah class BotPlayer
+
     /** Constructor to setup the UI and game components */
     public GameMain() {
 
