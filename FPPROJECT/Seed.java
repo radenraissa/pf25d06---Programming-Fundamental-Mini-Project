@@ -26,29 +26,42 @@ import javax.swing.ImageIcon;
  *  however, not supported.
  */
 public enum Seed {   // to save as "Seed.java"
-    CROSS("X", "FPPROJECT/images/boneca_labu.jpg"),   // displayName, imageFilename
-    NOUGHT("O", "FPPROJECT/images/tung_tung.jpg"),
+    CROSS("X", "FPPROJECT/images/x/xIcon.png"),
+    NOUGHT("O", "FPPROJECT/images/o/oIcon.png"),
     NO_SEED(" ", null);
 
     // Private variables
     private String displayName;
     private Image img = null;
+    private final String defaultImageFilename;
 
     // Constructor (must be private)
     private Seed(String name, String imageFilename) {
         this.displayName = name;
-
-        if (imageFilename != null) {
-            URL imgURL = getClass().getClassLoader().getResource(imageFilename);
-            ImageIcon icon = null;
+        this.defaultImageFilename = imageFilename; // Simpan path default
+        loadImage(imageFilename); // Muat gambar default saat inisialisasi
+    }
+    // Method untuk meload gambar
+    private void loadImage(String filename) {
+        if (filename != null) {
+            URL imgURL = getClass().getClassLoader().getResource(filename);
             if (imgURL != null) {
-                icon = new ImageIcon(imgURL);
-                //System.out.println(icon);  // debugging
+                this.img = new ImageIcon(imgURL).getImage();
             } else {
-                System.err.println("Couldn't find file " + imageFilename);
+                System.err.println("Tidak dapat menemukan file gambar: " + filename);
+                this.img = null;
             }
-            img = icon.getImage();
+        } else {
+            this.img = null;
         }
+    }
+
+    public void setImage(String imageFilename) {
+        loadImage(imageFilename);
+    }
+
+    public void resetToDefaultImage() {
+        loadImage(this.defaultImageFilename);
     }
 
     // Public getters

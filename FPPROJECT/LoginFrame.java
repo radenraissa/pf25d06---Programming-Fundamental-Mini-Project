@@ -3,6 +3,8 @@ package FPPROJECT;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Map;
+import java.util.Objects;
 
 public class LoginFrame extends JFrame {
     private final DatabaseManager dbManager;
@@ -97,6 +99,10 @@ public class LoginFrame extends JFrame {
     private void launchGame(String username) {
         dispose();
 
+        // Reset gambar ke default setiap kali memulai game baru
+        Seed.CROSS.resetToDefaultImage();
+        Seed.NOUGHT.resetToDefaultImage();
+
         // pemilihan mode
         javax.swing.SwingUtilities.invokeLater(() -> {
             Object[] options = {"LOCAL PVP", "PVE (vs bot)"};
@@ -114,12 +120,74 @@ public class LoginFrame extends JFrame {
 
             GameMode selectedMode = (choice == 0) ? GameMode.LOCAL_PVP : GameMode.LOCAL_PVE;
 
-            JFrame frame = new JFrame(GameMain.TITLE);
-            frame.setContentPane(new GameMain(selectedMode, username));
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
+            showCharacterSelectionAndStartGame(selectedMode, username);
         });
     }
+
+    private void showCharacterSelectionAndStartGame(GameMode selectedMode, String username) {
+        // Daftar karakter yang tersedia. Tambahkan karakter baru di sini.
+        // Key = Nama Karakter, Value = Path ke Gambar
+        Map<String, String> characters = Map.of(
+                // x
+                "default \"X\"", "FPPROJECT/images/x/xIcon.png",
+                "Boneca Labu", "FPPROJECT/images/x/boneca_labu.jpg",
+                "Bombardiro Croc", "FPPROJECT/images/x/Bombardiro_crocodilo.jpg",
+                "Cappuccino Assasin", "FPPROJECT/images/x/cappuccino_assassino.jpg",
+                // o
+                "default \"O\"", "FPPROJECT/images/o/oIcon.png",
+                "Tung Tung", "FPPROJECT/images/o/tung_tung.jpg",
+                "Tripi Tropi", "FPPROJECT/images/o/tripitropi.jpg",
+                "Trallalero Trala", "FPPROJECT/images/o/Trallalero_Trallala.jpg"
+        );
+
+        // Buat komponen UI untuk dialog
+        JPanel panel = new JPanel(new GridLayout(2, 2, 10, 5));
+        JComboBox<String> player1Box = new JComboBox<>(characters.keySet().toArray(new String[0]));
+        JComboBox<String> player2Box = new JComboBox<>(characters.keySet().toArray(new String[0]));
+        player2Box.setSelectedIndex(1); // Set pilihan default yang berbeda
+
+        panel.add(new JLabel("Pemain 1 (X):"));
+        panel.add(player1Box);
+        panel.add(new JLabel("Pemain 2 (O):"));
+        panel.add(player2Box);
+
+        // Tampilkan dialog pemilihan
+        int result = JOptionPane.showConfirmDialog(
+                null,
+                panel,
+                "Pilih Karakter",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (result == JOptionPane.OK_OPTION) {
+            String p1Selection = (String) player1Box.getSelectedItem();
+            String p2Selection = (String) player2Box.getSelectedItem();
+
+            if (Objects.equals(p1Selection, p2Selection)) {
+                JOptionPane.showMessageDialog(null, "Pemain tidak boleh menggunakan karakter yang sama.", "Error", JOptionPane.ERROR_MESSAGE);
+                showCharacterSelectionAndStartGame(selectedMode, username); // Ulangi pemilihan
+                return;
+            }
+
+            // Atur gambar berdasarkan pilihan
+            Seed.CROSS.setImage(characters.get(p1Selection));
+            Seed.NOUGHT.setImage(characters.get(p2Selection));
+
+            // Mulai game dengan karakter yang dipilih
+            startGameFrame(selectedMode, username);
+        } else {
+            System.exit(0); // Keluar jika pengguna membatalkan
+        }
+    }
+
+    private void startGameFrame(GameMode selectedMode, String username) {
+        JFrame frame = new JFrame(GameMain.TITLE);
+        frame.setContentPane(new GameMain(selectedMode, username));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
 }
+
