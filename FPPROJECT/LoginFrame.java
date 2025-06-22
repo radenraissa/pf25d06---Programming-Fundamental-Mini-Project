@@ -14,7 +14,7 @@ public class LoginFrame extends JFrame {
         super(GameMain.TITLE + " - Login");
         this.dbManager = new DatabaseManager();
 
-        // UI Components
+        // field uname & pasword
         usernameField = new JTextField(20);
         passwordField = new JPasswordField(20);
         JButton loginButton = new JButton("Login");
@@ -72,7 +72,7 @@ public class LoginFrame extends JFrame {
 
         if (dbManager.loginUser(username, password)) {
             JOptionPane.showMessageDialog(this, "Login Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            launchGame();
+            launchGame(username);
         } else {
             JOptionPane.showMessageDialog(this, "Invalid username or password.", "Login Failed", JOptionPane.ERROR_MESSAGE);
         }
@@ -94,11 +94,10 @@ public class LoginFrame extends JFrame {
         }
     }
 
-    private void launchGame() {
-        // Close the login window
+    private void launchGame(String username) {
         dispose();
 
-        // Run the game selection and launch logic from GameMain's original main method
+        // pemilihan mode
         javax.swing.SwingUtilities.invokeLater(() -> {
             Object[] options = {"LOCAL PVP", "PVE (vs bot)"};
             int choice = JOptionPane.showOptionDialog(
@@ -116,7 +115,7 @@ public class LoginFrame extends JFrame {
             GameMode selectedMode = (choice == 0) ? GameMode.LOCAL_PVP : GameMode.LOCAL_PVE;
 
             JFrame frame = new JFrame(GameMain.TITLE);
-            frame.setContentPane(new GameMain(selectedMode));
+            frame.setContentPane(new GameMain(selectedMode, username));
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.pack();
             frame.setLocationRelativeTo(null);
