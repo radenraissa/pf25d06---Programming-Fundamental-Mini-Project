@@ -4,8 +4,12 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import java.util.Map;
+
 public class GameMain extends JPanel {
     private static final long serialVersionUID = 1L;
+
+    private JButton viewStatsButton;
 
     public static final String TITLE = "Tic Tac Toe";
     public static final Color COLOR_BG = Color.WHITE;
@@ -21,7 +25,14 @@ public class GameMain extends JPanel {
     private GameMode currentMode;
     private BotPlayer bot;
 
-    public GameMain(GameMode mode) {
+    private DatabaseManager dbManager;
+    private String loggedInUser;
+
+    public GameMain(GameMode mode, String username){
+
+        this.dbManager = new DatabaseManager();
+        this.loggedInUser = username;
+
         this.currentMode = mode;
         if (this.currentMode == GameMode.LOCAL_PVE){
             bot = new BotPlayer();
@@ -55,7 +66,7 @@ public class GameMain extends JPanel {
                         }
                     }
                 } else {
-                    newGame();
+                    handleEndOfGame();
                 }
                 repaint();
             }
@@ -69,11 +80,45 @@ public class GameMain extends JPanel {
         statusBar.setHorizontalAlignment(JLabel.LEFT);
         statusBar.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 12));
 
+        // 2. Setup Tombol lihat stats
+        viewStatsButton = new JButton("Lihat Statistik");
+
+        // 3. Buat Panel untuk bagian bawah yang menampung statusBar dan tombol
+        JPanel southPanel = new JPanel(new BorderLayout());
+        southPanel.add(statusBar, BorderLayout.CENTER);  // Letakkan status bar di tengah
+        southPanel.add(viewStatsButton, BorderLayout.EAST); // Letakkan tombol di sisi kanan
+
+        // 4. Tambahkan Action Listener ke Tombol
+        viewStatsButton.addActionListener(e -> {
+            // Hanya jalankan jika pengguna sudah login (misal, tidak dalam mode offline tanpa login)
+            if (loggedInUser == null || loggedInUser.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Anda harus login untuk melihat statistik.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            Map<String, Integer> stats = dbManager.getUserStats(loggedInUser);
+            if (stats != null && !stats.isEmpty()) {
+                String message = String.format(
+                        "Statistik untuk: %s\n\nMatches Played: %d\nWins: %d\nLosses: %d",
+                        loggedInUser,
+                        stats.get("matchPlayed"),
+                        stats.get("win"),
+                        stats.get("lose")
+                );
+                JOptionPane.showMessageDialog(this, message, "Statistik Pemain", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Tidak dapat mengambil statistik untuk pengguna: " + loggedInUser, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+
+        // 5. Setup Layout Utama dan Tambahkan Panel
         super.setLayout(new BorderLayout());
-        super.add(statusBar, BorderLayout.PAGE_END);
+        super.add(southPanel, BorderLayout.PAGE_END); // Tambahkan panel bawah yang baru
         super.setPreferredSize(new Dimension(Board.CANVAS_WIDTH, Board.CANVAS_HEIGHT + 30));
         super.setBorder(BorderFactory.createLineBorder(COLOR_BG_STATUS, 2, false));
 
+        // Set up Game
         initGame();
         newGame();
     }
@@ -101,6 +146,28 @@ public class GameMain extends JPanel {
         currentPlayer = Seed.CROSS;
         currentState = State.PLAYING;
     }
+
+
+    private void handleEndOfGame() {
+        // Jangan lakukan apa-apa saat TTT masih dimainkan
+        if (currentState == State.PLAYING) {
+            return;
+        }
+
+        // akan meng-update statistik selain seri
+        if ((currentState == State.CROSS_WON || currentState == State.NOUGHT_WON) && currentMode == GameMode.LOCAL_PVE) {
+            boolean playerWon = (currentState == State.CROSS_WON);
+            dbManager.updateUserStats(loggedInUser, playerWon);
+            System.out.println("Statistik untuk " + loggedInUser + " telah diperbarui.");
+        }
+
+//        if (currentState == State.DRAW && currentMode == GameMode.LOCAL_PVE) {
+//        }
+
+        // restart game setelah diperbarui statistikny
+        newGame();
+    }
+
 
     @Override
     public void paintComponent(Graphics g) {
