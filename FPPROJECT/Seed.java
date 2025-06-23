@@ -26,36 +26,57 @@ import javax.swing.ImageIcon;
  *  however, not supported.
  */
 public enum Seed {   // to save as "Seed.java"
-    CROSS("X", "images/xo.png"),   // displayName, imageFilename
-    NOUGHT("O", "images/jacko.png"),
+    CROSS("X", "FPPROJECT/images/x/xIcon.png"),
+    NOUGHT("O", "FPPROJECT/images/o/oIcon.png"),
     NO_SEED(" ", null);
 
     // Private variables
     private String displayName;
     private Image img = null;
+    private final String defaultImageFilename;
+    private String soundFilename;
 
     // Constructor (must be private)
     private Seed(String name, String imageFilename) {
         this.displayName = name;
-
-        if (imageFilename != null) {
-            URL imgURL = getClass().getClassLoader().getResource(imageFilename);
-            ImageIcon icon = null;
+        this.defaultImageFilename = imageFilename; // Simpan path default
+        loadImage(imageFilename); // Muat gambar default saat inisialisasi
+        this.soundFilename = null;
+    }
+    // Method untuk meload gambar
+    private void loadImage(String filename) {
+        if (filename != null) {
+            URL imgURL = getClass().getClassLoader().getResource(filename);
             if (imgURL != null) {
-                icon = new ImageIcon(imgURL);
-                //System.out.println(icon);  // debugging
+                this.img = new ImageIcon(imgURL).getImage();
             } else {
-                System.err.println("Couldn't find file " + imageFilename);
+                System.err.println("Tidak dapat menemukan file gambar: " + filename);
+                this.img = null;
             }
-            img = icon.getImage();
+        } else {
+            this.img = null;
         }
     }
 
+    // Modifikasi method untuk mengatur gambar dan suara
+    public void setImageAndSound(String imageFilename, String soundFilename) {
+        loadImage(imageFilename);
+        this.soundFilename = soundFilename;
+    }
+
+    // method-nya dimodifikasi buat ngereset suara & gambar
+    public void resetToDefault() {
+        loadImage(this.defaultImageFilename);
+        this.soundFilename = null; // Reset suara juga
+    }
     // Public getters
     public String getDisplayName() {
         return displayName;
     }
     public Image getImage() {
         return img;
+    }
+    public String getSoundFilename() {
+        return soundFilename;
     }
 }
