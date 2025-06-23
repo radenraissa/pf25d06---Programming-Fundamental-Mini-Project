@@ -1,15 +1,17 @@
 package FPPROJECT;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Map;
 
 public class GameMain extends JPanel {
     private static final long serialVersionUID = 1L;
 
+    // --- Deklarasi Tombol Baru ---
     private JButton viewStatsButton;
+    private JButton backToLoginButton; // Tombol baru untuk kembali ke login
 
     public static final String TITLE = "Tic Tac Toe";
     public static final Color COLOR_BG = Color.WHITE;
@@ -28,13 +30,13 @@ public class GameMain extends JPanel {
     private DatabaseManager dbManager;
     private String loggedInUser;
 
-    public GameMain(GameMode mode, String username){
+    public GameMain(GameMode mode, String username) {
 
         this.dbManager = new DatabaseManager();
         this.loggedInUser = username;
 
         this.currentMode = mode;
-        if (this.currentMode == GameMode.LOCAL_PVE){
+        if (this.currentMode == GameMode.LOCAL_PVE) {
             bot = new BotPlayer();
         }
 
@@ -42,7 +44,7 @@ public class GameMain extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (currentState == State.PLAYING) {
-                    if (currentMode == GameMode.LOCAL_PVE && currentPlayer == Seed.NOUGHT){
+                    if (currentMode == GameMode.LOCAL_PVE && currentPlayer == Seed.NOUGHT) {
                         return;
                     }
 
@@ -54,7 +56,8 @@ public class GameMain extends JPanel {
                     if (row >= 0 && row < Board.ROWS && col >= 0 && col < Board.COLS
                             && board.cells[row][col].content == Seed.NO_SEED) {
 
-                        SoundManager.playSound(currentPlayer.getSoundFilename()); // pen-trigger suara
+                        // Asumsi Anda punya file SoundManager dan method di Seed
+                        // SoundManager.playSound(currentPlayer.getSoundFilename());
                         currentState = board.stepGame(currentPlayer, row, col);
                         currentPlayer = (currentPlayer == Seed.CROSS) ? Seed.NOUGHT : Seed.CROSS;
 
@@ -82,41 +85,34 @@ public class GameMain extends JPanel {
         statusBar.setHorizontalAlignment(JLabel.LEFT);
         statusBar.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 12));
 
-        // 2. Setup Tombol lihat stats
+        // Inisialisasi tombol-tombol
         viewStatsButton = new JButton("Lihat Statistik");
+        backToLoginButton = new JButton("Logout"); // Inisialisasi tombol baru
 
-        // 3. Buat Panel untuk bagian bawah yang menampung statusBar dan tombol
+        // Buat Panel untuk bagian bawah yang menampung statusBar dan tombol
         JPanel southPanel = new JPanel(new BorderLayout());
-        southPanel.add(statusBar, BorderLayout.CENTER);  // Letakkan status bar di tengah
-        southPanel.add(viewStatsButton, BorderLayout.EAST); // Letakkan tombol di sisi kanan
+        southPanel.add(statusBar, BorderLayout.CENTER);
+        southPanel.add(viewStatsButton, BorderLayout.EAST);
+        southPanel.add(backToLoginButton, BorderLayout.WEST); // Tambahkan tombol baru ke panel
 
-        // 4. Tambahkan Action Listener ke Tombol
-        viewStatsButton.addActionListener(e -> {
-            // Hanya jalankan jika pengguna sudah login (misal, tidak dalam mode offline tanpa login)
-            if (loggedInUser == null || loggedInUser.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Anda harus login untuk melihat statistik.", "Info", JOptionPane.INFORMATION_MESSAGE);
-                return;
+        // Tambahkan Action Listener untuk tombol Lihat Statistik
+        viewStatsButton.addActionListener(e -> showStats());
+
+        // --- Tambahkan Action Listener untuk Tombol Kembali ke Login ---
+        backToLoginButton.addActionListener(e -> {
+            // Dapatkan frame (jendela) tempat panel game ini berada
+            Window gameFrame = SwingUtilities.getWindowAncestor(this);
+            if (gameFrame != null) {
+                gameFrame.dispose(); // Tutup jendela game saat ini
             }
 
-            Map<String, Integer> stats = dbManager.getUserStats(loggedInUser);
-            if (stats != null && !stats.isEmpty()) {
-                String message = String.format(
-                        "Statistik untuk: %s\n\nMatches Played: %d\nWins: %d\nLosses: %d",
-                        loggedInUser,
-                        stats.get("matchPlayed"),
-                        stats.get("win"),
-                        stats.get("lose")
-                );
-                JOptionPane.showMessageDialog(this, message, "Statistik Pemain", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "Tidak dapat mengambil statistik untuk pengguna: " + loggedInUser, "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            // Buka kembali jendela login
+            SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
         });
 
-
-        // 5. Setup Layout Utama dan Tambahkan Panel
+        // Setup Layout Utama dan Tambahkan Panel
         super.setLayout(new BorderLayout());
-        super.add(southPanel, BorderLayout.PAGE_END); // Tambahkan panel bawah yang baru
+        super.add(southPanel, BorderLayout.PAGE_END);
         super.setPreferredSize(new Dimension(Board.CANVAS_WIDTH, Board.CANVAS_HEIGHT + 30));
         super.setBorder(BorderFactory.createLineBorder(COLOR_BG_STATUS, 2, false));
 
@@ -125,8 +121,25 @@ public class GameMain extends JPanel {
         newGame();
     }
 
+    private void showStats() {
+        Map<String, Integer> stats = dbManager.getUserStats(loggedInUser);
+        if (stats != null && !stats.isEmpty()) {
+            String message = String.format(
+                    "Statistik untuk: %s\n\nMatches Played: %d\nWins: %d\nLosses: %d",
+                    loggedInUser,
+                    stats.get("matchPlayed"),
+                    stats.get("win"),
+                    stats.get("lose")
+            );
+            JOptionPane.showMessageDialog(this, message, "Statistik Pemain", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Tidak dapat mengambil statistik untuk pengguna: " + loggedInUser, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void botMove() {
-        SoundManager.playSound(currentPlayer.getSoundFilename()); // pen-trigger suara gerakan bot
+        // Asumsi Anda punya file SoundManager dan method di Seed
+        // SoundManager.playSound(currentPlayer.getSoundFilename());
         if (currentState == State.PLAYING && currentPlayer == Seed.NOUGHT) {
             int[] move = bot.makeMove(board);
             int row = move[0];
@@ -150,27 +163,17 @@ public class GameMain extends JPanel {
         currentState = State.PLAYING;
     }
 
-
     private void handleEndOfGame() {
-        // Jangan lakukan apa-apa saat TTT masih dimainkan
         if (currentState == State.PLAYING) {
             return;
         }
-
-        // akan meng-update statistik selain seri
         if ((currentState == State.CROSS_WON || currentState == State.NOUGHT_WON) && currentMode == GameMode.LOCAL_PVE) {
             boolean playerWon = (currentState == State.CROSS_WON);
             dbManager.updateUserStats(loggedInUser, playerWon);
             System.out.println("Statistik untuk " + loggedInUser + " telah diperbarui.");
         }
-
-//        if (currentState == State.DRAW && currentMode == GameMode.LOCAL_PVE) {
-//        }
-
-        // restart game setelah diperbarui statistikny
         newGame();
     }
-
 
     @Override
     public void paintComponent(Graphics g) {
@@ -193,14 +196,7 @@ public class GameMain extends JPanel {
         }
     }
 
-    /**
-     * The entry "main" method.
-     * The application now starts with the LoginFrame.
-     */
     public static void main(String[] args) {
-        // Run GUI construction codes in Event-Dispatching thread for thread safety
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            new LoginFrame().setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
     }
 }
