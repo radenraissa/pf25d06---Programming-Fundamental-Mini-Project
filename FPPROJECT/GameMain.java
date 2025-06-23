@@ -14,11 +14,11 @@ public class GameMain extends JPanel {
     private JButton backToLoginButton; // Tombol baru untuk kembali ke login
 
     public static final String TITLE = "Tic Tac Toe";
-    public static final Color COLOR_BG = Color.WHITE;
+    public static final Color COLOR_BG = new Color(35, 40, 50);
     public static final Color COLOR_BG_STATUS = new Color(216, 216, 216);
     public static final Color COLOR_CROSS = new Color(239, 105, 80);
     public static final Color COLOR_NOUGHT = new Color(64, 154, 225);
-    public static final Font FONT_STATUS = new Font("OCR A Extended", Font.PLAIN, 14);
+    public static final Font FONT_STATUS = new Font("Segoe UI", Font.BOLD, 14);
 
     private Board board;
     private State currentState;
@@ -121,6 +121,7 @@ public class GameMain extends JPanel {
         newGame();
     }
 
+
     private void showStats() {
         Map<String, Integer> stats = dbManager.getUserStats(loggedInUser);
         if (stats != null && !stats.isEmpty()) {
@@ -186,13 +187,13 @@ public class GameMain extends JPanel {
             statusBar.setText((currentPlayer == Seed.CROSS) ? "X's Turn" : "O's Turn");
         } else if (currentState == State.DRAW) {
             statusBar.setForeground(Color.RED);
-            statusBar.setText("It's a Draw! Click to play again.");
+            statusBar.setText("It's a Draw!");
         } else if (currentState == State.CROSS_WON) {
             statusBar.setForeground(Color.RED);
-            statusBar.setText("'X' Won! Click to play again.");
+            statusBar.setText("'X' Won!");
         } else if (currentState == State.NOUGHT_WON) {
             statusBar.setForeground(Color.RED);
-            statusBar.setText("'O' Won! Click to play again.");
+            statusBar.setText("'O' Won!");
         }
     }
 
