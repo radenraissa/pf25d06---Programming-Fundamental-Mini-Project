@@ -56,8 +56,8 @@ public class GameMain extends JPanel {
                     if (row >= 0 && row < Board.ROWS && col >= 0 && col < Board.COLS
                             && board.cells[row][col].content == Seed.NO_SEED) {
 
-                        // Asumsi Anda punya file SoundManager dan method di Seed
-                        // SoundManager.playSound(currentPlayer.getSoundFilename());
+
+                        SoundManager.playSound(currentPlayer.getSoundFilename());
                         currentState = board.stepGame(currentPlayer, row, col);
                         currentPlayer = (currentPlayer == Seed.CROSS) ? Seed.NOUGHT : Seed.CROSS;
 
@@ -138,8 +138,8 @@ public class GameMain extends JPanel {
     }
 
     private void botMove() {
-        // Asumsi Anda punya file SoundManager dan method di Seed
-        // SoundManager.playSound(currentPlayer.getSoundFilename());
+
+        SoundManager.playSound(currentPlayer.getSoundFilename());
         if (currentState == State.PLAYING && currentPlayer == Seed.NOUGHT) {
             int[] move = bot.makeMove(board);
             int row = move[0];
