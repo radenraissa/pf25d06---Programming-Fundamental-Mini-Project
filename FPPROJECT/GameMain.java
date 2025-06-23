@@ -9,7 +9,7 @@ import java.util.Map;
 public class GameMain extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    // --- Deklarasi Tombol Baru ---
+    // --- Declare Tombol Baru ---
     private JButton viewStatsButton;
     private JButton backToLoginButton; // Tombol baru untuk kembali ke login
 
