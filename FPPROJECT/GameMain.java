@@ -14,11 +14,25 @@ public class GameMain extends JPanel {
     private JButton backToLoginButton; // Tombol baru untuk kembali ke login
 
     public static final String TITLE = "Tic Tac Toe";
-    public static final Color COLOR_BG = new Color(35, 40, 50);
-    public static final Color COLOR_BG_STATUS = new Color(216, 216, 216);
+    // Warna Latar & Grid
+    public static final Color COLOR_BG = new Color(25, 25, 40); // Biru sangat gelap
+    public static final Color COLOR_GRID = new Color(0, 150, 255); // Biru elektrik
+    // Warna Teks & Status
+    public static final Color COLOR_TEXT = new Color(210, 220, 240); // Putih kebiruan
+    public static final Color COLOR_WIN = new Color(80, 255, 120);
+    public static final Color COLOR_DRAW = new Color(255, 200, 0);
+    // Warna Tombol
+    public static final Color COLOR_BUTTON_BG = new Color(45, 50, 70); // Biru gelap keabuan
+    public static final Color COLOR_BUTTON_HOVER = new Color(0, 150, 255); // Efek hover biru elektrik
+    public static final Color COLOR_BUTTON_TEXT = new Color(210, 220, 240);
+
+    // --- Warna CROSS dan NOUGHT dari file .java (tidak terpakai jika gambar berhasil dimuat) ---
     public static final Color COLOR_CROSS = new Color(239, 105, 80);
     public static final Color COLOR_NOUGHT = new Color(64, 154, 225);
-    public static final Font FONT_STATUS = new Font("Segoe UI", Font.BOLD, 14);
+
+    // --- BENTUK FONT BARU ---
+    public static final Font FONT_STATUS = new Font("Segoe UI", Font.BOLD, 16);
+    public static final Font FONT_BUTTON = new Font("Segoe UI", Font.BOLD, 14);
 
     private Board board;
     private State currentState;
@@ -79,7 +93,7 @@ public class GameMain extends JPanel {
 
         statusBar = new JLabel();
         statusBar.setFont(FONT_STATUS);
-        statusBar.setBackground(COLOR_BG_STATUS);
+        statusBar.setBackground(COLOR_BG);
         statusBar.setOpaque(true);
         statusBar.setPreferredSize(new Dimension(300, 30));
         statusBar.setHorizontalAlignment(JLabel.LEFT);
@@ -114,7 +128,7 @@ public class GameMain extends JPanel {
         super.setLayout(new BorderLayout());
         super.add(southPanel, BorderLayout.PAGE_END);
         super.setPreferredSize(new Dimension(Board.CANVAS_WIDTH, Board.CANVAS_HEIGHT + 30));
-        super.setBorder(BorderFactory.createLineBorder(COLOR_BG_STATUS, 2, false));
+        super.setBorder(BorderFactory.createLineBorder(COLOR_BG, 2, false));
 
         // Set up Game
         initGame();

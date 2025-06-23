@@ -1,7 +1,6 @@
 package FPPROJECT;
 
-// A simple class to hold your database configuration details.
-// Fill in your actual credentials from Aiven here.
+
 public class Config {
     public static final String DB_HOST = "mysql-tictactoe-radenfp.f.aivencloud.com";
     public static final String DB_PORT = "25229";
