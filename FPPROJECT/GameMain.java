@@ -10,6 +10,7 @@ public class GameMain extends JPanel {
     private static final long serialVersionUID = 1L;
 
     private JButton viewStatsButton;
+    private JButton quitButton; // Add this line
 
     public static final String TITLE = "Tic Tac Toe";
     public static final Color COLOR_BG = Color.WHITE;
@@ -83,10 +84,28 @@ public class GameMain extends JPanel {
         // 2. Setup Tombol lihat stats
         viewStatsButton = new JButton("Lihat Statistik");
 
+        // NEW: Setup Quit Button
+        quitButton = new JButton("Quit");
+        quitButton.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Are you sure you want to quit?",
+                    "Confirm Quit",
+                    JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                System.exit(0); // Exits the application
+            }
+        });
+
         // 3. Buat Panel untuk bagian bawah yang menampung statusBar dan tombol
         JPanel southPanel = new JPanel(new BorderLayout());
-        southPanel.add(statusBar, BorderLayout.CENTER);  // Letakkan status bar di tengah
-        southPanel.add(viewStatsButton, BorderLayout.EAST); // Letakkan tombol di sisi kanan
+        southPanel.add(statusBar, BorderLayout.CENTER);
+
+        JPanel buttonContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT)); // Align buttons to the right
+        buttonContainer.add(viewStatsButton);
+        buttonContainer.add(quitButton); // Add the quit button
+
+        southPanel.add(buttonContainer, BorderLayout.EAST); // Add the button container to the EAST
+
 
         // 4. Tambahkan Action Listener ke Tombol
         viewStatsButton.addActionListener(e -> {
