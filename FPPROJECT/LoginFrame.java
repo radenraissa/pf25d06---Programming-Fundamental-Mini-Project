@@ -214,4 +214,3 @@ public class LoginFrame extends JFrame {
         frame.setVisible(true);
     }
 }
-
