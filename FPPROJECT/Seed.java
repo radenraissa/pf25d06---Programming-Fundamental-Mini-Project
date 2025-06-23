@@ -31,14 +31,14 @@ public enum Seed {   // to save as "Seed.java"
     NO_SEED(" ", null);
 
     // Private variables
-    private String displayName;
+    // private final String displayName; // kami pakai getImage() ehingga icon berupa gambar
     private Image img = null;
     private final String defaultImageFilename;
     private String soundFilename;
 
     // Constructor (must be private)
-    private Seed(String name, String imageFilename) {
-        this.displayName = name;
+    Seed(String name, String imageFilename) {
+        // this.displayName = name;
         this.defaultImageFilename = imageFilename; // Simpan path default
         loadImage(imageFilename); // Muat gambar default saat inisialisasi
         this.soundFilename = null;
@@ -70,9 +70,10 @@ public enum Seed {   // to save as "Seed.java"
         this.soundFilename = null; // Reset suara juga
     }
     // Public getters
-    public String getDisplayName() {
-        return displayName;
-    }
+//    public String getDisplayName() {
+//        return displayName;
+//    }  // karena kami pakai getImage() tanpa melakukan penggambaran icon
+
     public Image getImage() {
         return img;
     }
