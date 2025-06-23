@@ -34,12 +34,14 @@ public enum Seed {   // to save as "Seed.java"
     private String displayName;
     private Image img = null;
     private final String defaultImageFilename;
+    private String soundFilename;
 
     // Constructor (must be private)
     private Seed(String name, String imageFilename) {
         this.displayName = name;
         this.defaultImageFilename = imageFilename; // Simpan path default
         loadImage(imageFilename); // Muat gambar default saat inisialisasi
+        this.soundFilename = null;
     }
     // Method untuk meload gambar
     private void loadImage(String filename) {
@@ -56,19 +58,25 @@ public enum Seed {   // to save as "Seed.java"
         }
     }
 
-    public void setImage(String imageFilename) {
+    // Modifikasi method untuk mengatur gambar dan suara
+    public void setImageAndSound(String imageFilename, String soundFilename) {
         loadImage(imageFilename);
+        this.soundFilename = soundFilename;
     }
 
-    public void resetToDefaultImage() {
+    // method-nya dimodifikasi buat ngereset suara & gambar
+    public void resetToDefault() {
         loadImage(this.defaultImageFilename);
+        this.soundFilename = null; // Reset suara juga
     }
-
     // Public getters
     public String getDisplayName() {
         return displayName;
     }
     public Image getImage() {
         return img;
+    }
+    public String getSoundFilename() {
+        return soundFilename;
     }
 }

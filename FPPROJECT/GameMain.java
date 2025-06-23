@@ -54,6 +54,8 @@ public class GameMain extends JPanel {
 
                     if (row >= 0 && row < Board.ROWS && col >= 0 && col < Board.COLS
                             && board.cells[row][col].content == Seed.NO_SEED) {
+
+                        SoundManager.playSound(currentPlayer.getSoundFilename()); // pen-trigger suara
                         currentState = board.stepGame(currentPlayer, row, col);
                         currentPlayer = (currentPlayer == Seed.CROSS) ? Seed.NOUGHT : Seed.CROSS;
 
@@ -143,6 +145,7 @@ public class GameMain extends JPanel {
     }
 
     private void botMove() {
+        SoundManager.playSound(currentPlayer.getSoundFilename()); // pen-trigger suara gerakan bot
         if (currentState == State.PLAYING && currentPlayer == Seed.NOUGHT) {
             int[] move = bot.makeMove(board);
             int row = move[0];
