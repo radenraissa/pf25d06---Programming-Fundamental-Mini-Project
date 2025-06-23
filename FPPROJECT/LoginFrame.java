@@ -6,6 +6,9 @@ import java.awt.event.ActionEvent;
 import java.util.Map;
 import java.util.Objects;
 
+// untuk mengelompokkan data gambar dan suara menjadi satu.
+record Character(String name, String imagePath, String soundPath) {}
+
 public class LoginFrame extends JFrame {
     private final DatabaseManager dbManager;
 
@@ -100,8 +103,8 @@ public class LoginFrame extends JFrame {
         dispose();
 
         // Reset gambar ke default setiap kali memulai game baru
-        Seed.CROSS.resetToDefaultImage();
-        Seed.NOUGHT.resetToDefaultImage();
+        Seed.CROSS.resetToDefault();
+        Seed.NOUGHT.resetToDefault();  // disesuaikan setelah modif resetDefaultImage() di seed.java
 
         // pemilihan mode
         javax.swing.SwingUtilities.invokeLater(() -> {
@@ -125,26 +128,43 @@ public class LoginFrame extends JFrame {
     }
 
     private void showCharacterSelectionAndStartGame(GameMode selectedMode, String username) {
-        // Daftar karakter yang tersedia. Tambahkan karakter baru di sini.
-        // Key = Nama Karakter, Value = Path ke Gambar
-        Map<String, String> characters = Map.of(
-                // x
-                "default \"X\"", "FPPROJECT/images/x/xIcon.png",
+        // Pendekatan baru: Gunakan dua Map terpisah untuk gambar dan suara.
+        // Kunci (Key) untuk kedua Map adalah nama karakter.
+
+        // 1. Map untuk path gambar
+        Map<String, String> characterImages = Map.of(
+                "Default X", "FPPROJECT/images/x/xIcon.png",
                 "Boneca Labu", "FPPROJECT/images/x/boneca_labu.jpg",
                 "Bombardiro Croc", "FPPROJECT/images/x/Bombardiro_crocodilo.jpg",
                 "Cappuccino Assasin", "FPPROJECT/images/x/cappuccino_assassino.jpg",
-                // o
-                "default \"O\"", "FPPROJECT/images/o/oIcon.png",
+                "Default O", "FPPROJECT/images/o/oIcon.png",
                 "Tung Tung", "FPPROJECT/images/o/tung_tung.jpg",
                 "Tripi Tropi", "FPPROJECT/images/o/tripitropi.jpg",
                 "Trallalero Trala", "FPPROJECT/images/o/Trallalero_Trallala.jpg"
         );
 
+        // 2. Map atau alamat untuk path suara
+        Map<String, String> characterSounds = Map.of(
+                // suara utk X
+                "Default X", "FPPROJECT/audio/pencilsfx.wav",
+                "Boneca Labu", "FPPROJECT/audio/x/ambalabu-cut.wav",
+                "Bombardiro Croc", "FPPROJECT/audio/x/bombardiro-cut.wav",
+                "Cappuccino Assasin", "FPPROJECT/audio/x/cappuccino-cut.wav",
+
+                // suara utk O
+                "Default O", "FPPROJECT/audio/pencilsfx.wav",
+                "Trallalero Trala", "FPPROJECT/audio/o/tralalero-cut.wav",
+                "Tung Tung", "FPPROJECT/audio/o/tungtungtung-cut.wav",
+                "Tripi Tropi", "FPPROJECT/audio/o/tripitropi-cut.wav"
+
+        );
+
         // Buat komponen UI untuk dialog
         JPanel panel = new JPanel(new GridLayout(2, 2, 10, 5));
-        JComboBox<String> player1Box = new JComboBox<>(characters.keySet().toArray(new String[0]));
-        JComboBox<String> player2Box = new JComboBox<>(characters.keySet().toArray(new String[0]));
-        player2Box.setSelectedIndex(1); // Set pilihan default yang berbeda
+        // Gunakan keyset dari characterImages untuk mengisi JComboBox
+        JComboBox<String> player1Box = new JComboBox<>(characterImages.keySet().toArray(new String[0]));
+        JComboBox<String> player2Box = new JComboBox<>(characterImages.keySet().toArray(new String[0]));
+        player2Box.setSelectedIndex(4); // Set pilihan default yang berbeda
 
         panel.add(new JLabel("Pemain 1 (X):"));
         panel.add(player1Box);
@@ -153,26 +173,30 @@ public class LoginFrame extends JFrame {
 
         // Tampilkan dialog pemilihan
         int result = JOptionPane.showConfirmDialog(
-                null,
-                panel,
-                "Pilih Karakter",
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE
+                null, panel, "Pilih Karakter",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
         );
 
         if (result == JOptionPane.OK_OPTION) {
-            String p1Selection = (String) player1Box.getSelectedItem();
-            String p2Selection = (String) player2Box.getSelectedItem();
+            String p1SelectionName = (String) player1Box.getSelectedItem();
+            String p2SelectionName = (String) player2Box.getSelectedItem();
 
-            if (Objects.equals(p1Selection, p2Selection)) {
+            if (Objects.equals(p1SelectionName, p2SelectionName)) {
                 JOptionPane.showMessageDialog(null, "Pemain tidak boleh menggunakan karakter yang sama.", "Error", JOptionPane.ERROR_MESSAGE);
                 showCharacterSelectionAndStartGame(selectedMode, username); // Ulangi pemilihan
                 return;
             }
 
-            // Atur gambar berdasarkan pilihan
-            Seed.CROSS.setImage(characters.get(p1Selection));
-            Seed.NOUGHT.setImage(characters.get(p2Selection));
+            // 3. Ambil path gambar dan suara sebagai String dari masing-masing Map
+            String p1ImagePath = characterImages.get(p1SelectionName);
+            String p1SoundPath = characterSounds.get(p1SelectionName);
+
+            String p2ImagePath = characterImages.get(p2SelectionName);
+            String p2SoundPath = characterSounds.get(p2SelectionName);
+
+            // 4. Panggil setImageAndSound dengan variabel String
+            Seed.CROSS.setImageAndSound(p1ImagePath, p1SoundPath);
+            Seed.NOUGHT.setImageAndSound(p2ImagePath, p2SoundPath);
 
             // Mulai game dengan karakter yang dipilih
             startGameFrame(selectedMode, username);
