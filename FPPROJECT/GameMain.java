@@ -13,7 +13,7 @@ public class GameMain extends JPanel {
     private JButton viewStatsButton;
     private JButton backToLoginButton; // Tombol baru untuk kembali ke login
 
-    public static final String TITLE = "Tic Tac Toe";
+    public static final String TITLE = "Tic Tac Toe Brainrot";
     // Warna Latar & Grid
     public static final Color COLOR_BG = new Color(25, 25, 40); // Biru sangat gelap
     public static final Color COLOR_GRID = new Color(0, 150, 255); // Biru elektrik
@@ -121,7 +121,7 @@ public class GameMain extends JPanel {
             }
 
             // Buka kembali jendela login
-            SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
+            SwingUtilities.invokeLater(() -> new FrameManager().setVisible(true));
         });
 
         // Setup Layout Utama dan Tambahkan Panel
@@ -197,10 +197,10 @@ public class GameMain extends JPanel {
         board.paint(g);
 
         if (currentState == State.PLAYING) {
-            statusBar.setForeground(Color.BLACK);
+            statusBar.setForeground(Color.WHITE);
             statusBar.setText((currentPlayer == Seed.CROSS) ? "X's Turn" : "O's Turn");
         } else if (currentState == State.DRAW) {
-            statusBar.setForeground(Color.RED);
+            statusBar.setForeground(Color.BLUE);
             statusBar.setText("It's a Draw!");
         } else if (currentState == State.CROSS_WON) {
             statusBar.setForeground(Color.RED);
@@ -212,6 +212,6 @@ public class GameMain extends JPanel {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
+        SwingUtilities.invokeLater(() -> new FrameManager().setVisible(true));
     }
 }

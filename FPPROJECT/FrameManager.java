@@ -9,13 +9,13 @@ import java.awt.event.MouseEvent;
 import java.util.Map;
 import java.util.Objects;
 
-public class LoginFrame extends JFrame {
+public class FrameManager extends JFrame {
     private final DatabaseManager dbManager;
 
     private JTextField usernameField;
     private JPasswordField passwordField;
 
-    public LoginFrame() {
+    public FrameManager() {
         super(GameMain.TITLE + " - Login");
         this.dbManager = new DatabaseManager();
         setupFuturisticUI();
