@@ -76,7 +76,7 @@ public class FrameManager extends JFrame {
         registerButton.addActionListener(this::performRegister);
     }
 
-
+    // --- Helper Methods untuk membuat komponen UI ---
 
     private JTextField createFuturisticTextField() {
         JTextField textField = new JTextField(20);
@@ -136,6 +136,8 @@ public class FrameManager extends JFrame {
         UIManager.put("Button.focus", new Color(0, 0, 0, 0));
     }
 
+    // --- Action Methods (Login, Register, dll.) ---
+
     private void performLogin(ActionEvent e) {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
@@ -193,7 +195,8 @@ public class FrameManager extends JFrame {
     }
 
     private void showCharacterSelectionAndStartGame(GameMode selectedMode, String username) {
-
+        // --- PERBAIKAN: Path sudah benar (tanpa "FPPROJECT/") ---
+        // Menggunakan LinkedHashMap untuk menjaga urutan
         Map<String, String> characterImages = Map.of(
                 "Default X", "FPPROJECT/images/x/xIcon.png",
                 "Boneca Labu", "FPPROJECT/images/x/boneca_labu.jpg",

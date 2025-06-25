@@ -150,6 +150,7 @@ public class GameMain extends JPanel {
     private void botMove() {
 
         SoundManager.playSound(currentPlayer.getSoundFilename());
+
         if (currentState == State.PLAYING && currentPlayer == Seed.NOUGHT) {
             int[] move = bot.makeMove(board);
             int row = move[0];
