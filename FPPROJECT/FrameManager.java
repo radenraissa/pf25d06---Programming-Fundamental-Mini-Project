@@ -136,8 +136,6 @@ public class FrameManager extends JFrame {
         UIManager.put("Button.focus", new Color(0, 0, 0, 0));
     }
 
-
-
     private void performLogin(ActionEvent e) {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());

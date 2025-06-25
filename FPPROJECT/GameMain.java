@@ -9,19 +9,18 @@ import java.util.Map;
 public class GameMain extends JPanel {
     private static final long serialVersionUID = 1L;
 
-
     private JButton viewStatsButton;
     private JButton backToLoginButton; // Tombol baru untuk kembali ke login
 
     public static final String TITLE = "Tic Tac Toe Brainrot";
-    // Warna Latar & Grid
+
     public static final Color COLOR_BG = new Color(25, 25, 40); // Biru sangat gelap
     public static final Color COLOR_GRID = new Color(0, 150, 255); // Biru elektrik
-    // Warna Teks & Status
+
     public static final Color COLOR_TEXT = new Color(210, 220, 240); // Putih kebiruan
     public static final Color COLOR_WIN = new Color(80, 255, 120);
     public static final Color COLOR_DRAW = new Color(255, 200, 0);
-    // Warna Tombol
+
     public static final Color COLOR_BUTTON_BG = new Color(45, 50, 70); // Biru gelap keabuan
     public static final Color COLOR_BUTTON_HOVER = new Color(0, 150, 255); // Efek hover biru elektrik
     public static final Color COLOR_BUTTON_TEXT = new Color(210, 220, 240);
@@ -126,7 +125,6 @@ public class GameMain extends JPanel {
         super.add(southPanel, BorderLayout.PAGE_END);
         super.setPreferredSize(new Dimension(Board.CANVAS_WIDTH, Board.CANVAS_HEIGHT + 30));
         super.setBorder(BorderFactory.createLineBorder(COLOR_BG, 2, false));
-
 
         initGame();
         newGame();
