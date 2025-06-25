@@ -195,6 +195,7 @@ public class FrameManager extends JFrame {
     }
 
     private void showCharacterSelectionAndStartGame(GameMode selectedMode, String username) {
+        // --- PERBAIKAN: Path sudah benar (tanpa "FPPROJECT/") ---
         // Menggunakan LinkedHashMap untuk menjaga urutan
         Map<String, String> characterImages = Map.of(
                 "Default X", "FPPROJECT/images/x/xIcon.png",

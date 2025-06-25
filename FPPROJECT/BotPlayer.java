@@ -20,8 +20,7 @@ public class BotPlayer {
         Random random = new Random();
         int[] chosenMove = emptyCells.get(random.nextInt(emptyCells.size()));
         return chosenMove;
-        // chosenMove menghasilkan dua nilai index acak dalam array 1D yang batasannya ditentukan dari
-        // jumlah maksimum jumlah kolom yang kosong
+
     }
 
 }

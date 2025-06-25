@@ -8,7 +8,7 @@ public class Board {
     // Define named constants
     public static final int ROWS = 3;  // ROWS x COLS cells
     public static final int COLS = 3;
-    // Define named constants for drawing
+
     public static final int CANVAS_WIDTH = Cell.SIZE * COLS;  // the drawing canvas
     public static final int CANVAS_HEIGHT = Cell.SIZE * ROWS;
     public static final int GRID_WIDTH = 8;  // Grid-line's width
@@ -30,9 +30,9 @@ public class Board {
         cells = new Cell[ROWS][COLS]; // allocate the array
         for (int row = 0; row < ROWS; ++row) {
             for (int col = 0; col < COLS; ++col) {
-                // Allocate element of the array
+
                 cells[row][col] = new Cell(row, col);
-                // Cells are initialized in the constructor
+
             }
         }
     }
@@ -55,14 +55,13 @@ public class Board {
         // Update game board
         cells[selectedRow][selectedCol].content = player;
 
-        // Compute and return the new game state
-        if (cells[selectedRow][0].content == player  // 3-in-the-row
+        if (cells[selectedRow][0].content == player
                 && cells[selectedRow][1].content == player
                 && cells[selectedRow][2].content == player
-                || cells[0][selectedCol].content == player // 3-in-the-column
+                || cells[0][selectedCol].content == player
                 && cells[1][selectedCol].content == player
                 && cells[2][selectedCol].content == player
-                || selectedRow == selectedCol     // 3-in-the-diagonal
+                || selectedRow == selectedCol
                 && cells[0][0].content == player
                 && cells[1][1].content == player
                 && cells[2][2].content == player
@@ -76,11 +75,11 @@ public class Board {
             for (int row = 0; row < ROWS; ++row) {
                 for (int col = 0; col < COLS; ++col) {
                     if (cells[row][col].content == Seed.NO_SEED) {
-                        return State.PLAYING; // still have empty cells
+                        return State.PLAYING;
                     }
                 }
             }
-            return State.DRAW; // no empty cell, it's a draw
+            return State.DRAW;
         }
     }
 

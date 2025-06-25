@@ -9,28 +9,27 @@ import java.util.Map;
 public class GameMain extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    // --- Declare Tombol Baru ---
     private JButton viewStatsButton;
     private JButton backToLoginButton; // Tombol baru untuk kembali ke login
 
     public static final String TITLE = "Tic Tac Toe Brainrot";
-    // Warna Latar & Grid
+
     public static final Color COLOR_BG = new Color(25, 25, 40); // Biru sangat gelap
     public static final Color COLOR_GRID = new Color(0, 150, 255); // Biru elektrik
-    // Warna Teks & Status
+
     public static final Color COLOR_TEXT = new Color(210, 220, 240); // Putih kebiruan
     public static final Color COLOR_WIN = new Color(80, 255, 120);
     public static final Color COLOR_DRAW = new Color(255, 200, 0);
-    // Warna Tombol
+
     public static final Color COLOR_BUTTON_BG = new Color(45, 50, 70); // Biru gelap keabuan
     public static final Color COLOR_BUTTON_HOVER = new Color(0, 150, 255); // Efek hover biru elektrik
     public static final Color COLOR_BUTTON_TEXT = new Color(210, 220, 240);
 
-    // --- Warna CROSS dan NOUGHT dari file .java (tidak terpakai jika gambar berhasil dimuat) ---
+
     public static final Color COLOR_CROSS = new Color(239, 105, 80);
     public static final Color COLOR_NOUGHT = new Color(64, 154, 225);
 
-    // --- BENTUK FONT BARU ---
+
     public static final Font FONT_STATUS = new Font("Segoe UI", Font.BOLD, 16);
     public static final Font FONT_BUTTON = new Font("Segoe UI", Font.BOLD, 14);
 
@@ -99,38 +98,34 @@ public class GameMain extends JPanel {
         statusBar.setHorizontalAlignment(JLabel.LEFT);
         statusBar.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 12));
 
-        // Inisialisasi tombol-tombol
-        viewStatsButton = new JButton("Lihat Statistik");
-        backToLoginButton = new JButton("Logout"); // Inisialisasi tombol baru
 
-        // Buat Panel untuk bagian bawah yang menampung statusBar dan tombol
+        viewStatsButton = new JButton("Lihat Statistik");
+        backToLoginButton = new JButton("Logout");
+
         JPanel southPanel = new JPanel(new BorderLayout());
         southPanel.add(statusBar, BorderLayout.CENTER);
         southPanel.add(viewStatsButton, BorderLayout.EAST);
-        southPanel.add(backToLoginButton, BorderLayout.WEST); // Tambahkan tombol baru ke panel
+        southPanel.add(backToLoginButton, BorderLayout.WEST);
 
-        // Tambahkan Action Listener untuk tombol Lihat Statistik
+
         viewStatsButton.addActionListener(e -> showStats());
 
-        // --- Tambahkan Action Listener untuk Tombol Kembali ke Login ---
+
         backToLoginButton.addActionListener(e -> {
-            // Dapatkan frame (jendela) tempat panel game ini berada
+
             Window gameFrame = SwingUtilities.getWindowAncestor(this);
             if (gameFrame != null) {
-                gameFrame.dispose(); // Tutup jendela game saat ini
+                gameFrame.dispose();
             }
 
-            // Buka kembali jendela login
             SwingUtilities.invokeLater(() -> new FrameManager().setVisible(true));
         });
 
-        // Setup Layout Utama dan Tambahkan Panel
         super.setLayout(new BorderLayout());
         super.add(southPanel, BorderLayout.PAGE_END);
         super.setPreferredSize(new Dimension(Board.CANVAS_WIDTH, Board.CANVAS_HEIGHT + 30));
         super.setBorder(BorderFactory.createLineBorder(COLOR_BG, 2, false));
 
-        // Set up Game
         initGame();
         newGame();
     }
