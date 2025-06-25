@@ -7,13 +7,11 @@ import java.net.URL;
 public class SoundManager {
 
     public static void playSound(String soundFilePath) {
-        // Jangan lakukan apa-apa jika tidak ada path audio
         if (soundFilePath == null || soundFilePath.trim().isEmpty()) {
             return;
         }
 
         try {
-            // Menggunakan ClassLoader untuk mendapat audio dari classpath
             URL url = SoundManager.class.getClassLoader().getResource(soundFilePath);
             if (url == null) {
                 System.err.println("Tidak dapat menemukan file suara: " + soundFilePath);

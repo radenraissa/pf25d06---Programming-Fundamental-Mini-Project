@@ -15,7 +15,7 @@ public class DatabaseManager {
     private final String dbUrl;
 
     public DatabaseManager() {
-        // constructor URL database dari Config
+
         this.dbUrl = "jdbc:mysql://" + Config.DB_HOST + ":" + Config.DB_PORT + "/" + Config.DB_NAME + "?sslmode=require";
 
         try {
@@ -31,7 +31,7 @@ public class DatabaseManager {
     }
 
     public boolean registerUser(String username, String password) {
-        // SQL untuk memasukkan pengguna baru dengan password plain-text
+
         String insertSql = "INSERT INTO users (username, password) VALUES (?, ?)";
 
         try (Connection conn = getConnection();
@@ -43,10 +43,9 @@ public class DatabaseManager {
             return affectedRows > 0;
 
         } catch (SQLException e) {
-            // Error ini bisa terjadi jika username sudah ada (karena ada batasan UNIQUE)
-            // atau karena masalah koneksi lainnya.
+
             System.err.println("SQL error selama registrasi: " + e.getMessage());
-            // e.printStackTrace(); // Anda bisa uncomment ini untuk debug lebih lanjut
+
             return false;
         }
     }
@@ -58,7 +57,7 @@ public class DatabaseManager {
      * @return true jika username dan password cocok, false jika tidak.
      */
     public boolean loginUser(String username, String password) {
-        // SQL untuk mengambil password yang tersimpan
+
         String sql = "SELECT password FROM users WHERE username = ?";
 
         try (Connection conn = getConnection();
@@ -67,9 +66,8 @@ public class DatabaseManager {
             stmt.setString(1, username);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    // Ambil password dari database
+
                     String storedPassword = rs.getString("password");
-                    // Bandingkan langsung password dari database sama yg diinput player
                     return storedPassword.equals(password);
                 } else {
                     return false; // Pengguna tidak ditemukan
@@ -83,7 +81,6 @@ public class DatabaseManager {
     }
 
     public void updateUserStats(String username, boolean isWin) {
-        // SQL query disesuaikan dengan nama kolom baru: win, lose, matchPlayed
         String sql = "UPDATE users SET matchPlayed = matchPlayed + 1, " +
                 "win = win + ?, lose = lose + ? WHERE username = ?";
 

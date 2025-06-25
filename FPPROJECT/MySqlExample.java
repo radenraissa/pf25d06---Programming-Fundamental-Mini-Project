@@ -23,7 +23,6 @@ public class MySqlExample {
                 case "-port": port = args[++i]; break;
             }
         }
-        // JDBC allows to have nullable username and password
         if (host == null || port == null || databaseName == null) {
             System.out.println("Host, port, database information is required");
             return;
