@@ -116,7 +116,7 @@ public class GameMain extends JPanel {
 
             Window gameFrame = SwingUtilities.getWindowAncestor(this);
             if (gameFrame != null) {
-                gameFrame.dispose(); =
+                gameFrame.dispose();
             }
 
             SwingUtilities.invokeLater(() -> new FrameManager().setVisible(true));
