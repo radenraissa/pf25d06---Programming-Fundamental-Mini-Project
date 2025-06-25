@@ -113,7 +113,7 @@ public class GameMain extends JPanel {
 
 
         backToLoginButton.addActionListener(e -> {
-          =
+
             Window gameFrame = SwingUtilities.getWindowAncestor(this);
             if (gameFrame != null) {
                 gameFrame.dispose(); =
