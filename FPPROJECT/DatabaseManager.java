@@ -83,7 +83,6 @@ public class DatabaseManager {
     }
 
     public void updateUserStats(String username, boolean isWin) {
-        // SQL query disesuaikan dengan nama kolom baru: win, lose, matchPlayed
         String sql = "UPDATE users SET matchPlayed = matchPlayed + 1, " +
                 "win = win + ?, lose = lose + ? WHERE username = ?";
 
